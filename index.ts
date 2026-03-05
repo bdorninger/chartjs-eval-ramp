@@ -9,7 +9,7 @@ import {
   ChartEvent,
   Point,
   ChartConfiguration,
-  Tick,
+  Tick, 
   ChartDataset,
 } from 'chart.js/auto';
 
@@ -365,7 +365,7 @@ const config: ChartConfiguration = {
       return true;
     },
     plugins: {
-      zoom: {
+      /*zoom: {
         pan: {
           enabled: true,
           mode: 'xy',
@@ -386,7 +386,7 @@ const config: ChartConfiguration = {
           },
           mode: 'xy',
         },
-      },
+      },*/
       legend: {
         position: 'bottom',
         labels: {
