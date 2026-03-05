@@ -9,33 +9,11 @@ import {
   ChartEvent,
   Point,
   ChartConfiguration,
-  Tick, 
   ChartDataset,
 } from 'chart.js/auto';
 
 import { toRamp } from './ramp';
 
-// import dragData from 'chartjs-plugin-dragdata';
-// import zoomPlugin from 'chartjs-plugin-zoom';
-
-// import { TracePlugin } from './trace';
-
-// CROSSHAIR no import method yields a stable, usable plugin object....
-// imports undefined
-// import CrosshairPlugin from 'chartjs-plugin-crosshair';
-
-// import CrosshairPlugin from 'chartjs-plugin-crosshair'; // this one imports undefined
-// import Interpolate from 'chartjs-plugin-crosshair';
-
-/* this one imports an object with one entry "default": {} resulting in an   
-   error on initializing the chart plugins when resgistered as imported
-   if registered via CrosshairPlugin.default, the chart is being drawn,
-   but the crosshair/zoom does still not work
-   Debugging shows, the register method did not fail, but didn't insert anything into the plugin registry either
-*/
-// import { CrosshairPlugin, Interpolate } from 'chartjs-plugin-crosshair';
-//import * as CrosshairPlugin from 'chartjs-plugin-crosshair';
-// import { LineElement, LineProps, Segment, TooltipItem } from 'chart.js';
 import { ChartJSdragDataPlugin } from './drag';
 
 // DRAG SEGMENT: API incompatible!
@@ -48,10 +26,10 @@ const ctx = (
 ).getContext('2d');
 
 const tempRange = document.getElementById('tempRange');
-tempRange.addEventListener('change', onTempValueChange);
+tempRange?.addEventListener('change', onTempValueChange);
 
 const selPos = document.getElementById('posSel');
-selPos.addEventListener('change', onSelectionPositionChange);
+selPos?.addEventListener('change', onSelectionPositionChange);
 
 const stepB = document.getElementById('stepb') as HTMLButtonElement;
 stepB.addEventListener('click', onChangeStep);
@@ -130,19 +108,7 @@ const config: ChartConfiguration = {
         borderColor: colorLib('#ff00aa').alpha(0.2).rgbString(),
         radius: 0,
         fill: false,
-      },
-      /*{
-        data: [11, 12.5, 12.8, 14, 4.4, 8.5],
-        borderWidth: 1,
-        borderColor: 'rgba(255,0,0,0.4)',
-        backgroundColor: 'rgba(255,0,0,0)',
-      },*/
-      /*{
-        data: [10.5, 12.3, 12.6, 13.8, 3, 7.9],
-        borderWidth: 2,
-        borderColor: 'rgba(255,0,0,0.1)',
-        backgroundColor: 'rgba(255,0,0,0)',
-      },*/
+      },      
       {
         label: 'Pressure hi',
         data: [
@@ -150,9 +116,7 @@ const config: ChartConfiguration = {
           { x: 2, y: 7.5 },
           { x: 3.5, y: 7.7 },
           { x: 4, y: 8.7 },
-          { x: 10, y: 9 },
-          /*{ x: 6, y: 12 },
-          { x: 7, y: 11.5 },*/
+          { x: 10, y: 9 },          
         ],
 
         fill: '+1',
@@ -167,13 +131,7 @@ const config: ChartConfiguration = {
         pointStyle: 'rect', // "circle" | "cross" | "crossRot" | "dash" | "line" | "rect" | "rectRounded" | "rectRot" | "star" | "triangle" | HTMLImageElement | HTMLCanvasElemen
         radius: 6,
         rotation: 45,
-        stepped: false,
-        /*stepped: (a, b) => {
-          console.log(`scriptable stepped: `, a, b);
-          b.stepped = false;
-          return b.stepped;
-          // return b.stepped ? false : 'middle'; // true/false, 'before', ' middle' 'after'
-        },*/
+        stepped: false,        
       },
       {
         label: 'Pressure ed',
@@ -284,7 +242,7 @@ const config: ChartConfiguration = {
           text: 'Foo',
         },
         ticks: {
-          callback: function (val: number, index: number, ticks: Tick[]) {
+          callback: (val, index, ticks) => {
             // \u2771\u2771
             //  0x276e +f
             // Hide every 2nd tick label
@@ -339,15 +297,15 @@ const config: ChartConfiguration = {
     },*/
     onHover: function (e: ChartEvent) {
       const point = chart.getElementsAtEventForMode(
-        e.native,
+        e.native!,
         'nearest',
         { intersect: true },
         false
       );
       if (point.length) {
-        (e.native.target as HTMLElement).style.cursor = 'grab';
+        (e.native!.target as HTMLElement).style.cursor = 'grab';
       } else {
-        (e.native.target as HTMLElement).style.cursor = 'default';
+        (e.native!.target as HTMLElement).style.cursor = 'default';
       }
     },
     onClick: function (e: ChartEvent) {
@@ -355,7 +313,7 @@ const config: ChartConfiguration = {
         `chart ev ${e.type}@${e.x},${e.y}`,
 
         chart.getElementsAtEventForMode(
-          e.native,
+          e.native!,
           'dataset', // index, dataset, point, nearest, x,y
           { intersect: false },
           false
@@ -364,29 +322,7 @@ const config: ChartConfiguration = {
       );
       return true;
     },
-    plugins: {
-      /*zoom: {
-        pan: {
-          enabled: true,
-          mode: 'xy',
-          modifierKey: 'alt',
-          overScaleMode: undefined,
-          threshold: 10,
-        },
-        limits: {
-          x: { min: -1, max: 15 },
-          y: { min: -1, max: 25 },
-        },
-        zoom: {
-          wheel: {
-            enabled: true,
-          },
-          pinch: {
-            enabled: true,
-          },
-          mode: 'xy',
-        },
-      },*/
+    plugins: {      
       legend: {
         position: 'bottom',
         labels: {
@@ -483,11 +419,11 @@ const config: ChartConfiguration = {
             return value >= 2 && value <= 19;
           }
           const ret = { ...value };
-          if (value.y < 2) {
+          if (value?.y ?? 0 < 2) {
             ret.y = 2;
           }
-          if (value.y > 19) {
-            ret.y = 19;
+          if (value?.y ?? 30 > 29) {
+            ret.y = 29;
           }
           // console.log('returning: ', ret);
           return ret;
@@ -503,9 +439,9 @@ const config: ChartConfiguration = {
   },
 };
 
-const chart = new Chart(ctx, config);
+const chart = new Chart(ctx!, config);
 
-tempRange.setAttribute('value', String(chart.data.datasets[0].borderWidth));
+tempRange?.setAttribute('value', String(chart.data.datasets[0].borderWidth));
 
 export function onTempValueChange(ev: any) {
   ev.preventDefault();
@@ -546,7 +482,7 @@ export function onRampB(ev: MouseEvent) {
   const ko = chart.data.datasets[7] as ChartDataset<'line'>;
 
   if (ds != null && pt != null) {
-    const rmp = toRamp(pt.data as Point[]);
+    const rmp = toRamp(pt.data as any);
     ds.data = rmp.map((p) => ({ x: p.x, y: p.y + 10 }));
     if (ko != null) {
       ko.data = structuredClone(rmp)
