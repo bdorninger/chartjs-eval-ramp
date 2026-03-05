@@ -37,15 +37,8 @@ stepB.addEventListener('click', onChangeStep);
 const rampB = document.getElementById('rampb') as HTMLButtonElement;
 rampB.addEventListener('click', onRampB);
 
-// const crosshair = new TracePlugin();
-//console.log(`crosshair: ${JSON.stringify(crosshair)}`, crosshair.id);
-// console.log(`dragdate: ${JSON.stringify(ChartJSdragDataPlugin)}`);
-// const plugins = [CH.CrosshairPlugin];
 const dragData = ChartJSdragDataPlugin;
 Chart.register(dragData /*crosshair*/);
-//Interaction.modes.interpolate = Interpolate;
-
-// const reg = Chart.registry.plugins;
 
 const selectionBarData = [
   { x: 2.5, y: -0.5 },
@@ -54,8 +47,7 @@ const selectionBarData = [
 
 const config: ChartConfiguration = {
   type: 'line',
-  data: {
-    // labels: ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'],
+  data: {    
     datasets: [
       {
         label: 'Temperature',
@@ -440,6 +432,8 @@ const config: ChartConfiguration = {
 };
 
 const chart = new Chart(ctx!, config);
+
+console.warn("CHART", chart)
 
 tempRange?.setAttribute('value', String(chart.data.datasets[0].borderWidth));
 
